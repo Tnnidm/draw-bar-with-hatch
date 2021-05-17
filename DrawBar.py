@@ -1,4 +1,3 @@
-import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib as mpl
 # print(mpl.__version__)
@@ -13,13 +12,16 @@ def add_args():
 
     # 内容相关
     parser.add_argument('--data', nargs='+', type=float,\
-                     help='a string of data')
+                        help='a string of data')
 
     parser.add_argument('--legend_list', nargs='+', type=str, \
                         help='a string of list of legend')
     
     parser.add_argument('--y_label', type=str, default='', \
                         help='label of y-axis')
+    
+    parser.add_argument('--x_label', type=str, default='', \
+                        help='label of x-axis')    
 
     # 结果相关
     parser.add_argument('--picture_name', type=str, default='figure1.pdf', \
@@ -27,11 +29,14 @@ def add_args():
 
 
     # 绘图相关
-    parser.add_argument('--ymin', type=float, default=-99999, help='Y-axis display minimal')
+    parser.add_argument('--ymin', type=float, default=-99999, \
+                        help='Y-axis display minimal')
 
-    parser.add_argument('--ymax', type=float, default=99999, help='Y-axis display maximal')
+    parser.add_argument('--ymax', type=float, default=99999, \
+                        help='Y-axis display maximal')
 
-    parser.add_argument('--font', type=str, default='Helvetica', help='font')
+    parser.add_argument('--font', type=str, default='Helvetica', \
+                        help='font')
 
     parser.add_argument('--legend_position', type=int, default=1, \
                         help='position of lengend')
@@ -54,9 +59,11 @@ def add_args():
     parser.add_argument('--ylabel_fontsize', type=int, default=26, \
                         help='font size of yticks')
     
-    parser.add_argument('--linewidth', type=float, default=2, help='line width of bar and hatch')
+    parser.add_argument('--linewidth', type=float, default=2, \
+                        help='line width of bar and hatch')
 
-    parser.add_argument('--barwidth', type=float, default=0.618, help='width of bar (from 0 to 1)')
+    parser.add_argument('--barwidth', type=float, default=0.618, \
+                        help='width of bar (from 0 to 1)')
     
 
 
@@ -113,6 +120,9 @@ def main():
     Y_limit = calculate_y_limit(data_list, args)
 
     x = 0.2
+    '''
+    todo: 图窗相关
+    '''
     fig = plt.figure(figsize=(5.2*(1/(1-x)),5.2), dpi = 100)
 
     color = [(0.3098, 0.5059, 0.74120), (0.6078, 0.7333, 0.3490), \
@@ -122,6 +132,9 @@ def main():
             (0.1800, 0.6400, 0.5400)] 
     patterns = ['/', '\\', 'xx', 'x', '\\\\', '//', '+', '..', '++']
 
+    '''
+    todo: 字体检测
+    '''
     mpl.rcParams["font.family"] = args.font
     mpl.rcParams['hatch.linewidth'] = args.linewidth
 
@@ -144,7 +157,7 @@ def main():
         list2.append(' ')
     plt.xticks(list1, list2, fontsize=args.xticks_fontsize)
     plt.yticks(fontsize=args.yticks_fontsize)
-    plt.xlabel(" ", fontsize=args.xlabel_fontsize)
+    plt.xlabel(args.x_label, fontsize=args.xlabel_fontsize)
     plt.ylabel(args.y_label, fontsize=args.ylabel_fontsize)
 
     plt.ylim(Y_limit)

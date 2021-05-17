@@ -12,9 +12,10 @@ def add_args():
     parser = argparse.ArgumentParser(description='bar args')
 
     # 内容相关
-    parser.add_argument('--data', type=str, default='', help='a string of data')
+    parser.add_argument('--data', nargs='+', type=float,\
+                     help='a string of data')
 
-    parser.add_argument('--legend_list', type=str, default='', \
+    parser.add_argument('--legend_list', nargs='+', type=str, \
                         help='a string of list of legend')
     
     parser.add_argument('--y_label', type=str, default='', \
@@ -37,27 +38,32 @@ def add_args():
     
     parser.add_argument('--legend_column', type=int, default=1, \
                         help='column num in lengend')
+    
+    parser.add_argument('--legend_fontsize', type=int, default=18, \
+                        help='font size of legend')    
 
-    parser.add_argument('--linewidth', type=float, default=2, help='line width of hatch')
+    parser.add_argument('--xticks_fontsize', type=int, default=18, \
+                        help='font size of xticks')
 
-    parser.add_argument('--barwidth', type=float, default=0.618, help='width of bar')
+    parser.add_argument('--yticks_fontsize', type=int, default=18, \
+                        help='font size of yticks')
+
+    parser.add_argument('--xlabel_fontsize', type=int, default=26, \
+                        help='font size of xticks')
+
+    parser.add_argument('--ylabel_fontsize', type=int, default=26, \
+                        help='font size of yticks')
+    
+    parser.add_argument('--linewidth', type=float, default=2, help='line width of bar and hatch')
+
+    parser.add_argument('--barwidth', type=float, default=0.618, help='width of bar (from 0 to 1)')
     
 
 
     args = parser.parse_args()
     return args
 
-def str2floatlist():
-    '''
-    todo: transform a string to a list of floats
-    '''
-
-def str2strlist():
-    '''
-    todo: transform a string to a list of strings
-    '''
-
-def y_limit(data_list, args):
+def calculate_y_limit(data_list, args):
     Y_MIN = 0
     Y_MAX = 0
     data_min = min(data_list)
@@ -98,13 +104,14 @@ def y_limit(data_list, args):
 def main():
     # get all the program arguments.
     args = add_args()
-    # data_list = str2floatlist(args.data)
-    data_list = [712.6650, 220.5163, 232.7826, 524.5636]
-    # legend_list = str2strlist(args.legend_list)
-    legend_list = ['p=0.99,l=1,g=1','p=0.9,l=1,g=1','p=0.99,l=5,g=1','p=0.99,l=1,g=5']
-    Y_limit = y_limit(data_list, args)
-    lo = args.legend_position
-    nco = args.legend_column
+    data_list = args.data
+    legend_list = args.legend_list
+    if len(data_list) != len(legend_list):
+        print("ERROR: length of data does not equal to length of legend!")
+        return 0
+
+    Y_limit = calculate_y_limit(data_list, args)
+
     x = 0.2
     fig = plt.figure(figsize=(5.2*(1/(1-x)),5.2), dpi = 100)
 
@@ -118,40 +125,39 @@ def main():
     mpl.rcParams["font.family"] = args.font
     mpl.rcParams['hatch.linewidth'] = args.linewidth
 
-    FontSize1 = 18 # 小的字体
-    FontSize2 = 26 # 大的字体
-    X = 1
-    XX = 1
-    w = args.barwidth*XX
-    X_limit = (1-w, len(data_list)+w/2+1-w)
+    X_limit = (1-args.barwidth, len(data_list)+args.barwidth/2+1-args.barwidth)
 
     for i in range(len(data_list)):
-        plt.bar(X+i*XX, data_list[i], width = args.barwidth, \
+        plt.bar(i+1, data_list[i], width = args.barwidth, \
                 facecolor = 'white',edgecolor = color[i], hatch=patterns[i], \
                 linewidth = args.linewidth)
 
-    plt.rc('legend', fontsize=FontSize1)
-    plt.legend(legend_list, loc=lo, fancybox = False, edgecolor='black', \
+    plt.rc('legend', fontsize=args.legend_fontsize)
+    plt.legend(legend_list, loc=args.legend_position, fancybox = False, edgecolor='black', \
                 borderpad = 0.2, labelspacing = 0.2, handletextpad = 0.3, \
-                ncol = nco)
+                ncol = args.legend_column)
 
     list1 = []
     list2 = []
     for i in range(len(data_list)):
-        list1.append(X+i*XX)
+        list1.append(i+1)
         list2.append(' ')
-    plt.xticks(list1, list2, fontsize=FontSize1)
-    plt.yticks(fontsize=FontSize1)
-    plt.xlabel(" ", fontsize=FontSize2)
-    plt.ylabel(args.y_label, fontsize=FontSize2)
+    plt.xticks(list1, list2, fontsize=args.xticks_fontsize)
+    plt.yticks(fontsize=args.yticks_fontsize)
+    plt.xlabel(" ", fontsize=args.xlabel_fontsize)
+    plt.ylabel(args.y_label, fontsize=args.ylabel_fontsize)
 
     plt.ylim(Y_limit)
     plt.xlim(X_limit)
     
     plt.subplots_adjust(left=x)
 
-    plt.savefig("5.png")
-    plt.show()
+    if args.picture_name[-3:] == 'png':
+        plt.savefig(args.picture_name)
+    elif args.picture_name[-3:] == 'pdf':
+        pdf = PdfPages(args.picture_name)
+        pdf.savefig()
+        pdf.close()
 
 if __name__ == "__main__":
     main()

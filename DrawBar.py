@@ -111,22 +111,35 @@ def calculate_y_limit(data_list, args):
 
 
 def main():
-    # get all the program arguments.
+
+    # 读入参数
     args = add_args()
+
+    # 获取数据和legend信息
     data_list = args.data
     legend_list = args.legend_list
+
+    # 检查数据和标签数量是否相等
     if len(data_list) != len(legend_list):
         print("ERROR: length of data does not equal to length of legend!")
         return 0
+    
+    # 检查数据长度是否小于等于9个
+    if len(data_list) > 9:
+        print("ERROR: this tool cannot support more than 9 data.")
+        return 0
 
-    Y_limit = calculate_y_limit(data_list, args)
-
+    # 设置图窗
+    a = 0.25
     x = 0.2
     '''
     todo: 图窗相关
     '''
-    fig = plt.figure(figsize=(5.2*(1/(1-x)),5.2), dpi = 100)
+    fig = plt.figure(figsize=(5.2*((1/(1-x))),5.2), dpi = 100)
+    # 调整y轴label展示空间
+    plt.subplots_adjust(left=(x))
 
+    # 颜色和条纹样式
     color = [(0.3098, 0.5059, 0.74120), (0.6078, 0.7333, 0.3490), \
             (0.7490, 0.3137, 0.3020), (0.5000, 0.5000, 0.5000), \
             (0.9300, 0.6900, 0.1300), (0.3000, 0.7500, 0.9300),\
@@ -144,20 +157,22 @@ def main():
                 mpl.matplotlib_fname()[:-12]+'fonts/ttf/')
         return 0
 
+    # 设置条纹的线宽
     mpl.rcParams['hatch.linewidth'] = args.linewidth
 
-    X_limit = (1-args.barwidth, len(data_list)+args.barwidth/2+1-args.barwidth)
-
+    # 画图
     for i in range(len(data_list)):
         plt.bar(i+1, data_list[i], width = args.barwidth, \
                 facecolor = 'white',edgecolor = color[i], hatch=patterns[i], \
                 linewidth = args.linewidth)
 
+    # 设置legend
     plt.rc('legend', fontsize=args.legend_fontsize)
     plt.legend(legend_list, loc=args.legend_position, fancybox = False, edgecolor='black', \
                 borderpad = 0.2, labelspacing = 0.2, handletextpad = 0.3, \
                 ncol = args.legend_column)
 
+    # 绘制坐标轴刻度
     list1 = []
     list2 = []
     for i in range(len(data_list)):
@@ -165,13 +180,16 @@ def main():
         list2.append(' ')
     plt.xticks(list1, list2, fontsize=args.xticks_fontsize)
     plt.yticks(fontsize=args.yticks_fontsize)
+
+    # 绘制坐标轴标签
     plt.xlabel(args.x_label, fontsize=args.xlabel_fontsize)
     plt.ylabel(args.y_label, fontsize=args.ylabel_fontsize)
 
+    # 设置坐标轴展示范围
+    Y_limit = calculate_y_limit(data_list, args)
+    X_limit = (1-args.barwidth, len(data_list)+args.barwidth/2+1-args.barwidth)
     plt.ylim(Y_limit)
     plt.xlim(X_limit)
-    
-    plt.subplots_adjust(left=x)
 
     # 按照文件名选择保存格式
     if args.picture_name[-4:] == '.png' or args.picture_name[-4:] == '.jpg':

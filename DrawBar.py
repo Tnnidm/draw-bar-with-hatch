@@ -1,9 +1,10 @@
-from matplotlib import pyplot as plt
-import matplotlib as mpl
-# print(mpl.__version__)
-from matplotlib.backends.backend_pdf import PdfPages
-import argparse
 import os
+import argparse
+import matplotlib as mpl
+from matplotlib import pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
+
+
 
 def add_args():
     """
@@ -133,9 +134,7 @@ def main():
             (0.1800, 0.6400, 0.5400)] 
     patterns = ['/', '\\', 'xx', 'x', '\\\\', '//', '+', '..', '++']
 
-    '''
-    todo: 字体检测
-    '''
+    # 检查字体可用性
     ttf_list = os.listdir(mpl.matplotlib_fname()[:-12]+'fonts/ttf/')
     if args.font + '.ttf' in ttf_list:
         mpl.rcParams["font.family"] = args.font
@@ -174,12 +173,30 @@ def main():
     
     plt.subplots_adjust(left=x)
 
-    if args.picture_name[-3:] == 'png':
+    # 按照文件名选择保存格式
+    if args.picture_name[-4:] == '.png' or args.picture_name[-4:] == '.jpg':
         plt.savefig(args.picture_name)
-    elif args.picture_name[-3:] == 'pdf':
+    elif args.picture_name[-4:] == '.pdf':
         pdf = PdfPages(args.picture_name)
         pdf.savefig()
         pdf.close()
+    else:
+        print('Warning: you choose a filetype not supported by this tool. ' + \
+            'The picture will be stored as filetype .png.')
+        dot_place = len(args.picture_name)
+        for i in range(len(args.picture_name)):
+            if args.picture_name[len(args.picture_name)-1-i] == '.':
+                dot_place = len(args.picture_name)-1-i
+                break
+        if dot_place == 0:
+            if len(args.picture_name) != 1:
+                plt.savefig(args.picture_name[1:]+'.png')
+            else:
+                print('Warning: the filename input has only a point. ' + \
+                    'The picture will be stored as 1.png.')
+                plt.savefig('1.png')
+        else:
+            plt.savefig(args.picture_name[:dot_place]+'.png')
 
 if __name__ == "__main__":
     main()

@@ -3,6 +3,7 @@ import matplotlib as mpl
 # print(mpl.__version__)
 from matplotlib.backends.backend_pdf import PdfPages
 import argparse
+import os
 
 def add_args():
     """
@@ -135,7 +136,15 @@ def main():
     '''
     todo: 字体检测
     '''
-    mpl.rcParams["font.family"] = args.font
+    ttf_list = os.listdir(mpl.matplotlib_fname()[:-12]+'fonts/ttf/')
+    if args.font + '.ttf' in ttf_list:
+        mpl.rcParams["font.family"] = args.font
+    else:
+        print('ERROR: the font ' + args.font + ' is not in font-lib of matplotlib! ' + \
+                'You can add the .ttf file of the font you need into ' + \
+                mpl.matplotlib_fname()[:-12]+'fonts/ttf/')
+        return 0
+
     mpl.rcParams['hatch.linewidth'] = args.linewidth
 
     X_limit = (1-args.barwidth, len(data_list)+args.barwidth/2+1-args.barwidth)

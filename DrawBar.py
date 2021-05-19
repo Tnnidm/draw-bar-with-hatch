@@ -31,6 +31,14 @@ def add_args():
 
 
     # 绘图相关
+
+    parser.add_argument('--aspect_ratio', type=float, default=1, \
+                        help='aspect ratio of graphs (excluding labels)')
+
+
+    parser.add_argument('--y_label_length_ratio', type=float, default=0.25, \
+                        help='some times the length of x-axis is used for the y-label')
+
     parser.add_argument('--ymin', type=float, default=-99999, \
                         help='Y-axis display minimal')
 
@@ -91,7 +99,7 @@ def calculate_y_limit(data_list, args):
             Y_MAX = args.ymax
     elif data_max < 0:
         if args.ymin == -99999:
-            Y_MIN = 1.2*data_max
+            Y_MIN = 1.2*data_min
         else:
             Y_MIN = args.ymin
         if args.ymax == 99999:
@@ -100,13 +108,14 @@ def calculate_y_limit(data_list, args):
             Y_MAX = args.ymax
     else:
         if args.ymin == -99999:
-            Y_MIN = 1.2*data_max
+            Y_MIN = 1.2*data_min
         else:
             Y_MIN = args.ymin
         if args.ymax == 99999:
             Y_MAX = 1.2*data_max
         else:
             Y_MAX = args.ymax
+        plt.axhline(y=0, color = 'black', linewidth=0.8)
     return (Y_MIN, Y_MAX)                        
 
 
@@ -130,15 +139,14 @@ def main():
         return 0
 
     # 设置图窗
-    a = 0.25
-    x = 0.2
     '''
     todo: 图窗相关
     '''
-    fig = plt.figure(figsize=(5.2*((1/(1-x))),5.2), dpi = 100)
+    fig = plt.figure(figsize=(5.6*(args.y_label_length_ratio+1)*args.aspect_ratio,5.6), dpi = 100)
     # 调整y轴label展示空间
-    plt.subplots_adjust(left=(x))
-
+    plt.subplots_adjust(left=(args.y_label_length_ratio/(args.y_label_length_ratio+1)))
+    # plt.tight_layout()
+    
     # 颜色和条纹样式
     color = [(0.3098, 0.5059, 0.74120), (0.6078, 0.7333, 0.3490), \
             (0.7490, 0.3137, 0.3020), (0.5000, 0.5000, 0.5000), \
@@ -187,7 +195,7 @@ def main():
 
     # 设置坐标轴展示范围
     Y_limit = calculate_y_limit(data_list, args)
-    X_limit = (1-args.barwidth, len(data_list)+args.barwidth/2+1-args.barwidth)
+    X_limit = (args.barwidth/2, len(data_list)+args.barwidth/2+1-args.barwidth)
     plt.ylim(Y_limit)
     plt.xlim(X_limit)
 

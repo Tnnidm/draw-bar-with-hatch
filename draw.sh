@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
 python DrawBar.py\
- --data 712.6650 220.5163 232.7826 524.5636 \
- --legend_list "p=0.99,l=1,g=1" "p=0.9,l=1,g=1" "p=0.99,l=5,g=1" "p=0.99,l=1,g=5" \
+ --data 712.6650 170.0032 264.8931 -426.2866 \
+ --legend_list "1111" "2222" "3333" "4444" \
  --y_label "Average system utility" \
- --picture_name figure1.pdf \
- --legend_position 9 \
- --legend_column 1
+ --picture_name figure1.png \
+ --legend_position 1 \
+ --legend_column 2 \
+ --barwidth 0.7 \
+ --aspect_ratio 1 \
+ --y_label_length_ratio 0.25

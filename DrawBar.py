@@ -26,7 +26,7 @@ def add_args():
                         help='label of x-axis')    
 
     # 结果相关
-    parser.add_argument('--picture_name', type=str, default='figure1.pdf', \
+    parser.add_argument('--picture_name', type=str, default='test.png', \
                         help='name of file storing picture (include extension)')
 
 
@@ -64,15 +64,15 @@ def add_args():
                         help='font size of yticks')
 
     parser.add_argument('--xlabel_fontsize', type=int, default=26, \
-                        help='font size of xticks')
+                        help='font size of xlabel')
 
     parser.add_argument('--ylabel_fontsize', type=int, default=26, \
-                        help='font size of yticks')
+                        help='font size of ylabel')
     
     parser.add_argument('--linewidth', type=float, default=2, \
                         help='line width of bar and hatch')
 
-    parser.add_argument('--barwidth', type=float, default=0.618, \
+    parser.add_argument('--barwidth', type=float, default=0.7, \
                         help='width of bar (from 0 to 1)')
     
 
@@ -162,7 +162,8 @@ def main():
     else:
         print('ERROR: the font ' + args.font + ' is not in font-lib of matplotlib! ' + \
                 'You can add the .ttf file of the font you need into ' + \
-                mpl.matplotlib_fname()[:-12]+'fonts/ttf/')
+                mpl.matplotlib_fname()[:-12]+'fonts/ttf/, then reset matplotlib cache by runing: rm -rf '+ 
+                mpl.get_cachedir())
         return 0
 
     # 设置条纹的线宽

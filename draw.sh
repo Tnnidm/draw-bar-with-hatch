@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-python DrawBar.py\
- --data 712.6650 170.0032 264.8931 -426.2866 \
- --legend_list "1111" "2222" "3333" "4444" \
- --y_label "Average system utility" \
- --picture_name figure1.png \
- --legend_position 1 \
- --legend_column 2 \
- --barwidth 0.7 \
- --aspect_ratio 1 \
- --y_label_length_ratio 0.25
+/opt/conda/bin/python DrawBar.py\
+ --data 22.104 40.467 48.955 54.033 57.038 \
+ --legend_list "case 1" "case 2" "case 3" "case 4" "case 5" \
+ --y_label "system performance" \
+ --picture_name test.png \
+ --legend_position 2 \
+ --legend_column 2

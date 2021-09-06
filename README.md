@@ -1,4 +1,7 @@
 # bar_with_hatch_tool
+
+![visitors](https://visitor-badge.glitch.me/badge?page_id=https://github.com/Tnnidm/draw-bar-with-hatch)
+
 ## Motivation
 
 I used to do experiment result visualization for my paper by matlab. However, I found that bar graph with hatchs done by `applyhatch_pluscolor` in matlab looked so strange: the bars with color stripe have black outlines ?!
